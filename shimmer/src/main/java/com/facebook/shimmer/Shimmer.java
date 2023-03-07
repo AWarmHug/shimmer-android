@@ -44,13 +44,15 @@ public class Shimmer {
     Direction.LEFT_TO_RIGHT,
     Direction.TOP_TO_BOTTOM,
     Direction.RIGHT_TO_LEFT,
-    Direction.BOTTOM_TO_TOP
+    Direction.BOTTOM_TO_TOP,
+    Direction.NO_MOVE
   })
   public @interface Direction {
     int LEFT_TO_RIGHT = 0;
     int TOP_TO_BOTTOM = 1;
     int RIGHT_TO_LEFT = 2;
     int BOTTOM_TO_TOP = 3;
+    int NO_MOVE = 4;
   }
 
   final float[] positions = new float[COMPONENT_COUNT];

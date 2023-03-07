@@ -22,6 +22,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.view.animation.LinearInterpolator;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -38,10 +39,12 @@ public final class ShimmerDrawable extends Drawable {
   private final Rect mDrawRect = new Rect();
   private final Matrix mShaderMatrix = new Matrix();
 
-  private @Nullable ValueAnimator mValueAnimator;
+  private @Nullable
+  ValueAnimator mValueAnimator;
   private float mStaticAnimationProgress = -1f;
 
-  private @Nullable Shimmer mShimmer;
+  private @Nullable
+  Shimmer mShimmer;
 
   public ShimmerDrawable() {
     mShimmerPaint.setAntiAlias(true);
@@ -59,30 +62,39 @@ public final class ShimmerDrawable extends Drawable {
     invalidateSelf();
   }
 
-  public @Nullable Shimmer getShimmer() {
+  public @Nullable
+  Shimmer getShimmer() {
     return mShimmer;
   }
 
-  /** Starts the shimmer animation. */
+  /**
+   * Starts the shimmer animation.
+   */
   public void startShimmer() {
     if (mValueAnimator != null && !isShimmerStarted() && getCallback() != null) {
       mValueAnimator.start();
     }
   }
 
-  /** Stops the shimmer animation. */
+  /**
+   * Stops the shimmer animation.
+   */
   public void stopShimmer() {
     if (mValueAnimator != null && isShimmerStarted()) {
       mValueAnimator.cancel();
     }
   }
 
-  /** Return whether the shimmer animation has been started. */
+  /**
+   * Return whether the shimmer animation has been started.
+   */
   public boolean isShimmerStarted() {
     return mValueAnimator != null && mValueAnimator.isStarted();
   }
 
-  /** Return whether the shimmer animation is running. */
+  /**
+   * Return whether the shimmer animation is running.
+   */
   public boolean isShimmerRunning() {
     return mValueAnimator != null && mValueAnimator.isRunning();
   }
@@ -113,12 +125,6 @@ public final class ShimmerDrawable extends Drawable {
     if (mShimmer == null || mShimmerPaint.getShader() == null) {
       return;
     }
-
-    final float tiltTan = (float) Math.tan(Math.toRadians(mShimmer.tilt));
-    final float translateHeight = mDrawRect.height() + tiltTan * mDrawRect.width();
-    final float translateWidth = mDrawRect.width() + tiltTan * mDrawRect.height();
-    final float dx;
-    final float dy;
     final float animatedValue;
 
     if (mStaticAnimationProgress < 0f) {
@@ -127,30 +133,43 @@ public final class ShimmerDrawable extends Drawable {
       animatedValue = mStaticAnimationProgress;
     }
 
-    switch (mShimmer.direction) {
-      default:
-      case Shimmer.Direction.LEFT_TO_RIGHT:
-        dx = offset(-translateWidth, translateWidth, animatedValue);
-        dy = 0;
-        break;
-      case Shimmer.Direction.RIGHT_TO_LEFT:
-        dx = offset(translateWidth, -translateWidth, animatedValue);
-        dy = 0f;
-        break;
-      case Shimmer.Direction.TOP_TO_BOTTOM:
-        dx = 0f;
-        dy = offset(-translateHeight, translateHeight, animatedValue);
-        break;
-      case Shimmer.Direction.BOTTOM_TO_TOP:
-        dx = 0f;
-        dy = offset(translateHeight, -translateHeight, animatedValue);
-        break;
-    }
+    if (mShimmer.direction == Shimmer.Direction.NO_MOVE) {
+      mShimmerPaint.setAlpha((int) (animatedValue * 255));
+    } else {
+      final float tiltTan = (float) Math.tan(Math.toRadians(mShimmer.tilt));
+      final float translateHeight = mDrawRect.height() + tiltTan * mDrawRect.width();
+      final float translateWidth = mDrawRect.width() + tiltTan * mDrawRect.height();
+      final float dx;
+      final float dy;
 
-    mShaderMatrix.reset();
-    mShaderMatrix.setRotate(mShimmer.tilt, mDrawRect.width() / 2f, mDrawRect.height() / 2f);
-    mShaderMatrix.preTranslate(dx, dy);
-    mShimmerPaint.getShader().setLocalMatrix(mShaderMatrix);
+      switch (mShimmer.direction) {
+        default:
+        case Shimmer.Direction.LEFT_TO_RIGHT:
+          dx = offset(-translateWidth, translateWidth, animatedValue);
+          dy = 0;
+          break;
+        case Shimmer.Direction.RIGHT_TO_LEFT:
+          dx = offset(translateWidth, -translateWidth, animatedValue);
+          dy = 0f;
+          break;
+        case Shimmer.Direction.TOP_TO_BOTTOM:
+          dx = 0f;
+          dy = offset(-translateHeight, translateHeight, animatedValue);
+          break;
+        case Shimmer.Direction.BOTTOM_TO_TOP:
+          dx = 0f;
+          dy = offset(translateHeight, -translateHeight, animatedValue);
+          break;
+        case Shimmer.Direction.NO_MOVE:
+          dx = 0f;
+          dy = 0f;
+          break;
+      }
+      mShaderMatrix.reset();
+      mShaderMatrix.setRotate(mShimmer.tilt, mDrawRect.width() / 2f, mDrawRect.height() / 2f);
+      mShaderMatrix.preTranslate(dx, dy);
+      mShimmerPaint.getShader().setLocalMatrix(mShaderMatrix);
+    }
     canvas.drawRect(mDrawRect, mShimmerPaint);
   }
 

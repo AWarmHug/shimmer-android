@@ -107,6 +107,12 @@
         android:text="6" />
 
       <Button
+        android:id="@+id/preset_button7"
+        style="@style/thin.white.small.button"
+        android:gravity="center"
+        android:text="7" />
+
+      <Button
         android:id="@+id/preset_button6"
         style="@style/thin.white.small.button"
         android:gravity="center"

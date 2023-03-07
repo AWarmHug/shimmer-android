@@ -10,11 +10,14 @@ package com.facebook.shimmer.sample
 
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.Shimmer.Direction
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.android.synthetic.main.main.*
 
@@ -36,7 +39,8 @@ class MainActivity : Activity(), View.OnClickListener {
             preset_button3,
             preset_button4,
             preset_button5,
-            preset_button6)
+            preset_button6,
+            preset_button7,)
     presetButtons.forEach { it.setOnClickListener(this@MainActivity) }
     selectPreset(0, false)
   }
@@ -69,7 +73,7 @@ class MainActivity : Activity(), View.OnClickListener {
     // If a toast is already showing, hide it
     toast?.cancel()
 
-    val shimmerBuilder = Shimmer.AlphaHighlightBuilder()
+    val shimmerBuilder = Shimmer.ColorHighlightBuilder()
     shimmerViewContainer.setShimmer(
         when (preset) {
           1 -> {
@@ -107,6 +111,19 @@ class MainActivity : Activity(), View.OnClickListener {
                 .setIntensity(0.35f)
                 .setTilt(45f)
                 .setShape(Shimmer.Shape.RADIAL)
+          }
+          7 ->{
+            shimmerBuilder
+//                .setBaseAlpha(0.1f)
+//                .setHighlightAlpha(1f)
+                .setBaseColor(ContextCompat.getColor(this,R.color.base))
+                .setHighlightColor(ContextCompat.getColor(this,R.color.high_light))
+                .setDuration(1000L)
+                .setDropoff(0.1f)
+                .setIntensity(1f)
+                .setDirection(Direction.NO_MOVE)
+                .setRepeatMode(ValueAnimator.REVERSE)
+                .setTilt(0f)
           }
           6 -> {
             // Off
