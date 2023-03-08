@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.Shimmer.Direction
+import com.facebook.shimmer.Shimmer.Shape
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.android.synthetic.main.main.*
 
@@ -73,7 +74,7 @@ class MainActivity : Activity(), View.OnClickListener {
     // If a toast is already showing, hide it
     toast?.cancel()
 
-    val shimmerBuilder = Shimmer.ColorHighlightBuilder()
+    val shimmerBuilder = Shimmer.AlphaHighlightBuilder()
     shimmerViewContainer.setShimmer(
         when (preset) {
           1 -> {
@@ -113,15 +114,16 @@ class MainActivity : Activity(), View.OnClickListener {
                 .setShape(Shimmer.Shape.RADIAL)
           }
           7 ->{
+            toast = Toast.makeText(this, "breathe", Toast.LENGTH_SHORT)
             shimmerBuilder
-//                .setBaseAlpha(0.1f)
-//                .setHighlightAlpha(1f)
-                .setBaseColor(ContextCompat.getColor(this,R.color.base))
-                .setHighlightColor(ContextCompat.getColor(this,R.color.high_light))
+                .setBaseAlpha(0.1f)
+                .setHighlightAlpha(1f)
+//                .setBaseColor(ContextCompat.getColor(this,R.color.base))
+//                .setHighlightColor(ContextCompat.getColor(this,R.color.high_light))
                 .setDuration(1000L)
                 .setDropoff(0.1f)
                 .setIntensity(1f)
-                .setDirection(Direction.NO_MOVE)
+                .setShape(Shape.BREATHE)
                 .setRepeatMode(ValueAnimator.REVERSE)
                 .setTilt(0f)
           }
